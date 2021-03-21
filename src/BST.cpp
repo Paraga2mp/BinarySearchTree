@@ -1,6 +1,7 @@
 
 #include <iomanip>
 #include <fstream>
+#include <iostream>
 #include "BST.h"
 
 using namespace std;
@@ -102,7 +103,7 @@ Node* BST::RotateLeft(Node *node) {
 }
 
 // operator to compare sequential letters of two strings, is less than or not
-bool operator < (string firstStr,string secondStr) {
+bool operator < (string firstStr, string secondStr) {
 
     int i = 0;
     int n = firstStr.length() < secondStr.length() ? firstStr.length() : secondStr.length();
@@ -217,10 +218,9 @@ Node* BST::Search(Node* root, string key) {
     return Search(root->left, key);
 }
 
-void PrintTree(ostream& output, NodePtr& node, int indent, ofstream& outFile) {
-//    indent += 8;
+void BST::PrintTree(ostream& output, NodePtr& node, int indent, ofstream& outFile) {
+
     if (node != nullptr) {
-//        indent += 8;
         PrintTree(output, node->right, indent + 16, outFile);
         output << setw(indent) << node->word << endl;
         outFile << setw(indent) << node->word << endl;
@@ -229,11 +229,97 @@ void PrintTree(ostream& output, NodePtr& node, int indent, ofstream& outFile) {
 }
 
 ostream& operator<<(ostream& output, BST& bst) {
+
     ofstream outputFile;
     string outPath = "..\\output\\BSTOutput.txt";
     outputFile.open(outPath);
-    PrintTree(output, bst.root, 0, outputFile);
+
+    if(!outputFile) {
+        cout << "Could not create the file" << endl;
+    }
+    else {
+        bst.PrintTree(output, bst.root, 0, outputFile);
+    }
     return output;
+}
+
+
+// read the file content and insert the content into a binary tree
+void BST::ReadDictionary(BST &bst, string &filename) {
+
+    string word;
+    ifstream dictionary(filename);
+
+    if (dictionary.is_open()) {
+        while (getline(dictionary, word)) {
+            bst.InsertNode(word);
+        }
+        dictionary.close();
+    }
+    else {
+        cout << "Could not open file to read" << endl;
+    }
+}
+
+// read the file content and store into a string
+string BST::ReadFileToCheck(string &filename) {
+
+    string document;
+    string documentSegment;
+    ifstream file(filename);
+
+    if (file.is_open()) {
+        while (getline(file, documentSegment)) {
+            document += documentSegment;
+        }
+        file.close();
+    }
+    else {
+        cout << "Could not open file to read" << endl;
+    }
+    return document;
+}
+
+// check the tree for the words in the file and if the words from the file
+// are not found in the tree print the words to the console
+void BST::CheckError(BST &bst, string &filename) {
+
+    string fileData;
+    fileData = ReadFileToCheck(filename);
+    string words[1000];
+    int j = 0;
+
+    string newWord = "";
+
+    for(int i = 0; i < fileData.length(); i++) {
+        if (fileData[i] >= 'A' && fileData[i] <= 'Z') {
+            newWord += fileData[i];
+        }
+        else if(fileData[i] >= 'a' && fileData[i] <= 'z') {
+            newWord += fileData[i];
+        }
+        else if(!newWord.empty()) {
+            words[j] = newWord;
+            newWord = "";
+            j++;
+        }
+    }
+
+    int totalError = 0;
+
+    // search for every words of the words array the tree, if not found print the word
+    for(int i = 0; i < j; i++) {
+        if(!bst.SearchResult(words[i])) {
+            if(totalError == 0) {
+                cout << "Errors found in your file" << endl;
+            }
+            cout << words[i] << endl;
+            totalError++;
+        }
+    }
+    if(totalError == 0) {
+        cout << "No error found." << endl;
+    }
 }
 
 

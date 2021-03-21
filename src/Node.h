@@ -7,6 +7,7 @@
 using namespace std;
 
 class Node {
+
 public:
     string word;
     Node *left;
@@ -14,8 +15,6 @@ public:
     int height;
 
     Node();
-
-//    Node() : word("0"), left(NULL), right(NULL), height(1){};
     virtual ~Node();
 };
 
