@@ -20,8 +20,10 @@ public:
 
     Node *RotateRight(Node *y);
     Node *RotateLeft(Node *x);
-    Node* Insert(Node* node, string key);
-    Node* Search(Node* root, string key);
+    Node* Insert(Node* node, string word);
+    void InsertNode(string &word);
+    Node* Search(Node* root, string word);
+    bool SearchResult(string &word);
 
     friend bool operator < (string first,string second);
     friend bool operator > (string first,string second);
@@ -30,13 +32,10 @@ public:
     void PrintTree(ostream& output, NodePtr& node, int indent, ofstream& outFile);
     string GetWord(Node *node);
     string ConvertToLowerCase(string &str);
-    void InsertNode(string &key);
-    bool SearchResult(string &key);
 
     void ReadDictionary(BST &bst, string &filename);
     string ReadFileToCheck(string &filename);
     void CheckError(BST &bst, string &filename);
-
 
 };
 

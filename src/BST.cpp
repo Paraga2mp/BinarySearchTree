@@ -24,41 +24,45 @@ int BST::Max(int firstNum, int secondNum) {
     return (firstNum > secondNum) ? firstNum : secondNum;
 }
 
-//function to find height of branch.
+//function to find height of a branch
 int BST::Height(Node *node) {
 
     if (node == NULL) {
         return 0;
     }
+
     return node->height;
 }
 
-//Function for getting key value.
+//Function for getting word
 string BST::GetWord(Node *node) {
 
     if (node == NULL) {
         return 0;
     }
+
     return node->word;
 }
 
-//Function to check if tree is balanced.
+//Function to check if the tree is balanced or not
 int BST::GetBalance(Node *node) {
 
     if (node == NULL) {
         return 0;
     }
+    // if the diff is -1 or 0 or 1, the tree is balanced
     return Height(node->left) - Height(node->right);
 }
 
-//Function to convert Uppercase letter to lowercase.
+//Function to convert uppercase letter to lowercase
 string BST::ConvertToLowerCase(string &str) {
 
     string newString;
 
-    for(int i=0; i < str.length(); i++) {
+    for(int i = 0; i < str.length(); i++) {
         newString += tolower(str[i]);
     }
+
     return newString;
 }
 
@@ -68,17 +72,17 @@ Node* BST::RotateRight(Node *node) {
     Node *subTree = node->left;
     Node *leaf = subTree->right;
 
-    // Perform rotation
+    // perform rotation
     subTree->right = node;
     node->left = leaf;
 
-    // Update heights
+    // update heights
     node->height = Max(Height(node->left),
                        Height(node->right)) + 1;
     subTree->height = Max(Height(subTree->left),
                           Height(subTree->right)) + 1;
 
-    // Return new root
+    // return new root
     return subTree;
 }
 
@@ -88,17 +92,17 @@ Node* BST::RotateLeft(Node *node) {
     Node *subTree = node->right;
     Node *leaf = subTree->left;
 
-    // Perform rotation
+    // perform rotation
     subTree->left = node;
     node->right = leaf;
 
-    // Update heights
+    // update heights
     node->height = Max(Height(node->left),
                        Height(node->right)) + 1;
     subTree->height = Max(Height(subTree->left),
                           Height(subTree->right)) + 1;
 
-    // Return new root
+    // return new root
     return subTree;
 }
 
@@ -134,12 +138,11 @@ bool operator > (string firstStr, string secondStr) {
     return firstStr.length() > secondStr.length();
 }
 
-
 // Function to call the recursive function to insert a word in the tree
 // rooted with given node
-void BST::InsertNode(string &key) {
+void BST::InsertNode(string &word) {
 
-    root = Insert(root,key);
+    root = Insert(root,word);
 }
 
 //Recursive function to insert a word in the tree rooted with node and
@@ -198,26 +201,28 @@ Node* BST::Insert(Node* node, string word) {
 }
 
 //Function to search a word from the tree.
-bool BST::SearchResult(string &key) {
+bool BST::SearchResult(string &word) {
 
-    return Search(root, ConvertToLowerCase(key)) != NULL;
+    return Search(root, ConvertToLowerCase(word)) != NULL;
 }
 
 //Recursive function to search a word from the tree
-Node* BST::Search(Node* root, string key) {
+Node* BST::Search(Node* root, string word) {
 
-    if (root == NULL || root->word == key)
+    if (root == NULL || root->word == word) {
         return root;
+    }
 
     // word is greater than root's word
-    if (root->word < key) {
-        return Search(root->right, key);
+    if (root->word < word) {
+        return Search(root->right, word);
     }
 
     // word is less than root's word
-    return Search(root->left, key);
+    return Search(root->left, word);
 }
 
+// print the balanced tree to the console and write to a file
 void BST::PrintTree(ostream& output, NodePtr& node, int indent, ofstream& outFile) {
 
     if (node != nullptr) {
@@ -228,6 +233,7 @@ void BST::PrintTree(ostream& output, NodePtr& node, int indent, ofstream& outFil
     }
 }
 
+// output the balance tree to the console and write to a file
 ostream& operator<<(ostream& output, BST& bst) {
 
     ofstream outputFile;
@@ -235,11 +241,12 @@ ostream& operator<<(ostream& output, BST& bst) {
     outputFile.open(outPath);
 
     if(!outputFile) {
-        cout << "Could not create the file" << endl;
+        cout << "Could not create or write to the file" << endl;
     }
     else {
         bst.PrintTree(output, bst.root, 0, outputFile);
     }
+
     return output;
 }
 
@@ -277,6 +284,7 @@ string BST::ReadFileToCheck(string &filename) {
     else {
         cout << "Could not open file to read" << endl;
     }
+
     return document;
 }
 

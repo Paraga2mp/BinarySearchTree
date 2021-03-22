@@ -3,7 +3,7 @@
 
 Node::Node() {
 
-    this->word = "0";
+    this->word = "";
     this->left = NULL;
     this->right = NULL;
     this->height = 1;
